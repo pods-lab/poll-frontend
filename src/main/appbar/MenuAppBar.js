@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -10,20 +10,20 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 
 const styles = {
-    root: {
-        flexGrow: 1,
+    root : {
+        flexGrow : 1,
 
     },
-    grow: {
-        flexGrow: 1,
+    grow : {
+        flexGrow : 1,
     },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
+    menuButton : {
+        marginLeft  : -12,
+        marginRight : 20,
     },
 };
 
-class MenuAppBar extends React.Component {
+class MenuAppBar extends PureComponent {
 
     render() {
         const { classes } = this.props;
@@ -39,7 +39,7 @@ class MenuAppBar extends React.Component {
                             Electronic survey
                         </Typography>
                     </Toolbar>
-                </AppBar>
+                 </AppBar>
             </div>
         );
     }

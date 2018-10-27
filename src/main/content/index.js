@@ -59,6 +59,7 @@ class Content extends Component{
     validateEmail(email)
     {
         const re = /\S+@\S+\.\S+/;
+        if(email === '') return true;
         return re.test(email);
     }
 

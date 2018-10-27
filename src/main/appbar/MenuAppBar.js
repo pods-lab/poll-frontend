@@ -23,6 +23,10 @@ const styles = {
     },
 };
 
+/**
+ * @author Jhoan López <jhoanlt19@gmail.com>
+ * @description Appbar
+ */
 class MenuAppBar extends PureComponent {
 
     render() {

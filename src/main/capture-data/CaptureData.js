@@ -8,6 +8,7 @@ import {
     Typography
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 const styles = theme => ({
     button : {
@@ -23,6 +24,10 @@ const styles = theme => ({
     }
 });
 
+/**
+ * @author Jhoan López <jhoanlt19@gmail.com>
+ * @description Formulario de captura de datos del usuario
+ */
 class CaptureData extends PureComponent{
     render(){
         const {
@@ -31,6 +36,7 @@ class CaptureData extends PureComponent{
             email,
             phone,
             error,
+            validateEmail,
             onChangeValueFields,
             validateInputPhone,
             handleSave
@@ -57,7 +63,8 @@ class CaptureData extends PureComponent{
                                 value    = {email}
                                 onChange = {(e) => onChangeValueFields(e)}
                             />
-                            {error && <Typography variant="caption">Debes completar este campo</Typography>}
+                            {error && !validateEmail && <Typography variant="caption">Debes completar este campo</Typography>}
+                            {validateEmail && <Typography variant="caption">El email debe de ser válido</Typography>}
                         </FormControl>
                         <FormControl className={classes.input} fullWidth>
                             <InputLabel>Celular</InputLabel>
@@ -84,5 +91,15 @@ class CaptureData extends PureComponent{
         );
     }
 }
+
+CaptureData.propTypes = {
+    classes             : PropTypes.object,
+    email               : PropTypes.string.isRequired,
+    phone               : PropTypes.string,
+    error               : PropTypes.bool.isRequired,
+    onChangeValueFields : PropTypes.func.isRequired,
+    validateInputPhone  : PropTypes.func.isRequired,
+    handleSave          : PropTypes.func.isRequired
+};
 
 export default withStyles(styles) (CaptureData);

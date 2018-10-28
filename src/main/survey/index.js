@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import {
+    CircularProgress,
     Grid,
     Button,
     Card,
@@ -110,8 +111,25 @@ class Survey extends Component {
 
     constructor(props) {
         super(props);
-        this.state.survey = data;
+        this.state.survey = [];
         this.maxSteps = data.groups? data.groups.length : 0;
+    }
+
+    componentDidMount() {
+        const serverName = process.env.REACT_APP_API_SERVER;
+        const listPath = process.env.REACT_APP_ENDPOINT_LIST;
+        const endpoint = `${serverName}${listPath}`;
+        fetch(endpoint, {})
+            .then((response) => response.json())
+            .then((response) => {
+            if(response !== false) {
+                this.setState({
+                    survey: response,
+                })
+            }
+        }).catch(() => {
+
+        })
     }
 
     renderItems(group) {
@@ -204,6 +222,12 @@ class Survey extends Component {
                 />
             );
 
+        if(!groups) return (
+            <div className="p-24 flex justify-center">
+                <CircularProgress size={50}/>
+            </div>
+        );
+
         return (
             <div className="w-full mt-8">
                 <Grid container justify="center">
@@ -214,7 +238,9 @@ class Survey extends Component {
                                     {groups.map((group) => (
                                         <Step key={group.title}>
                                             <StepLabel>
-                                                {group.title}: <strong>{group.average_value}</strong>
+                                                <div className="w-full flex">
+                                                    {group.title}: <span className="ml-auto"><strong>{Math.ceil(group.average_value)}%</strong></span>
+                                                </div>
                                             </StepLabel>
                                             <StepContent className="w-full">
                                                     {this.renderItems(group)}
@@ -226,7 +252,7 @@ class Survey extends Component {
                             <CardContent>
                                 <div className="text-right px-12">
                                     <Typography variant="title">
-                                        <strong>Total:</strong> <span>{survey.average_value}</span>
+                                        <strong>Total:</strong> <span>{Math.ceil(survey.average_value)}</span>
                                     </Typography>
                                 </div>
                                 <div className="flex justify-around  mt-12 my-4">

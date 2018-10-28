@@ -37,7 +37,8 @@ class CaptureData extends PureComponent{
             validateEmail,
             onChangeValueFields,
             validateInputPhone,
-            handleSave
+            handleSave,
+            isValid=false,
         } = this.props;
         return(
             <Grid container justify="center" alignItems="center">
@@ -47,6 +48,7 @@ class CaptureData extends PureComponent{
                             <FormControl className={classes.input} fullWidth required>
                                 <InputLabel>Email</InputLabel>
                                 <Input
+                                    autoFocus
                                     error    = {error}
                                     type     = "email"
                                     name     = "email"
@@ -71,11 +73,11 @@ class CaptureData extends PureComponent{
                                     name     = "name"
                                     value    = {name}
                                     onChange = {(e) => onChangeValueFields(e)}
-                                    autoFocus
                                 />
                             </FormControl>
                             <div className={`w-full ${classes.button}`}>
                                 <Button
+                                    disabled  = {!isValid}
                                     variant   = "contained"
                                     color     = "primary"
                                     className = {classes.button}

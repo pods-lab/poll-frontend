@@ -1,5 +1,4 @@
 import React, {Component, Fragment} from 'react';
-import MenuAppBar from "../appbar/MenuAppBar";
 import CaptureData from "../capture-data/CaptureData";
 
 /**
@@ -15,6 +14,11 @@ class Content extends Component{
         error         : false,
         validateEmail : false,
     };
+
+    isValid() {
+        const {email} = this.state;
+        return email !== "" && email !== null && this.validateEmail(email);
+    }
 
     /**
      * Control de cambios en el valor de los campos del formulario
@@ -38,12 +42,21 @@ class Content extends Component{
      * Guardar datos
      */
     handleSave(){
-        const {name, email, phone, error} = this.state;
+        const {email, name, phone} = this.state;
+        const {
+            setUserData,
+        } = this.props;
+
         this.setState({error : email === ''});
 
         if(email !== '' && this.validateEmail(email)){
             //Request to the API
-            alert("Guardar Información");
+            setUserData({
+                email,
+                cellphone   : phone,
+                fullName    : name,
+            }, 1);
+
         } else if(email !== '' && !this.validateEmail(email)){
             this.setState({
                 validateEmail : true,
@@ -86,12 +99,11 @@ class Content extends Component{
             email,
             phone,
             error,
-            validateEmail
+            validateEmail,
         } = this.state;
 
         return(
             <Fragment>
-                <MenuAppBar/>
                 <CaptureData
                     name                = {name}
                     email               = {email}
@@ -101,6 +113,7 @@ class Content extends Component{
                     handleSave          = {() => this.handleSave()}
                     onChangeValueFields = {(e) => this.onChangeValueFields(e)}
                     validateInputPhone  = {(e) => this.validateInputPhone(e)}
+                    isValid             = {this.isValid()}
                 />
             </Fragment>
         );

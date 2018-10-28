@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component, Fragment} from 'react';
 import Content from "./content";
+import Survey from "./survey";
+import MenuAppBar from "./appbar/MenuAppBar";
 
 class AppComponent extends Component {
     state = {
-        currentStep : 0,
+        currentStep : 1,
         userData : {
             email: null,
             cellphone: null,
@@ -11,25 +13,29 @@ class AppComponent extends Component {
         }
     };
 
-    setUserData({fullName=null, email=null, cellphone=null}) {
+    setUserData({fullName=null, email=null, cellphone=null}, step=0,) {
         this.setState({
             email,
             cellphone,
             fullName,
+            currentStep: step,
         });
     }
 
-    changeStep(step) {
-
-    }
-
     render() {
+        const {currentStep} = this.state;
+
         return (
             <div className="App w-full h-full">
-                <Content
-                    setUserData={this.setUserData.bind(this)}
-                    changeStep={this.changeStep.bind(this)}
-                />
+                <MenuAppBar/>
+                {currentStep === 0 && (
+                    <Content
+                        setUserData={this.setUserData.bind(this)}
+                    />
+                )}
+                {currentStep === 1 && (
+                    <Survey />
+                )}
             </div>
         );
     }

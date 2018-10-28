@@ -4,10 +4,8 @@ import Content from "./content";
 class AppComponent extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Content/>
-        </header>
+      <div className="App w-full h-full">
+        <Content/>
       </div>
     );
   }

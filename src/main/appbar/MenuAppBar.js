@@ -5,14 +5,11 @@ import {
     AppBar,
     Toolbar,
     Typography,
-    IconButton,
 } from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu';
 
 const styles = {
     root : {
         flexGrow : 1,
-
     },
     grow : {
         flexGrow : 1,
@@ -36,10 +33,7 @@ class MenuAppBar extends PureComponent {
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.grow}>
+                        <Typography variant="h6" color="inherit" className={`text-center ${classes.grow}`}>
                             Electronic survey
                         </Typography>
                     </Toolbar>

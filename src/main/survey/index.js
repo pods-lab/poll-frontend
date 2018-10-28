@@ -10,14 +10,14 @@ import {
     StepLabel,
     StepContent,
     Step,
-    TextField,
-    Divider,
 } from '@material-ui/core';
 import {
     Send,
     ArrowBack,
     ArrowForward,
 } from '@material-ui/icons';
+import Group from './Group';
+import Resume from "./Resume";
 const styles = theme => ({
     item: {
         borderBottom: "1px dashed #EEE",
@@ -105,6 +105,7 @@ class Survey extends Component {
     state = {
         currentStep: 0,
         survey: {},
+        displayResume: false,
     };
 
     constructor(props) {
@@ -116,31 +117,11 @@ class Survey extends Component {
     renderItems(group) {
         const {classes} = this.props;
         return (
-            <div className="w-full">
-                {group.items.map((item, key) => (
-                    <div className={`w-full md:flex items-center ${classes.item} mb-8`} key={`group-items-list-element-${group.code}-${key}`}>
-                        <div className="w-full md:w-4/5 lg:w-full flex items-start py-4   ">
-                            <span className={classes.nomenclature}>
-                                {item.nomenclature}.
-                            </span>
-                            <div className={classes.itemText}>
-                                {item.title}
-                            </div>
-                        </div>
-                        <div className="w-full md:w-1/5 flex justify-end h-full items-end">
-                            <div>
-                                <TextField
-                                    onClick={(e) => e.target.select() }
-                                    value={item.value}
-                                    type={"number"}
-                                    onChange={(e) => this.onChangeInput(e, group.code, item.code)}
-                                />
-                            </div>
-                        </div>
-                        <Divider />
-                    </div>
-                ))}
-            </div>
+            <Group
+                group={group}
+                classes={classes}
+                onChangeInput={this.onChangeInput.bind(this)}
+            />
         );
     }
 
@@ -175,7 +156,9 @@ class Survey extends Component {
     }
 
     onFinish() {
-        alert("done!");
+        this.setState({
+            displayResume: true,
+        });
     }
 
     nextStep() {
@@ -201,9 +184,26 @@ class Survey extends Component {
         });
     }
 
+    goBack() {
+        window.location.reload();
+    }
+
+    printResult() {
+        alert("about to print");
+    }
+
     render() {
-        const {currentStep, survey} = this.state;
+        const {currentStep, survey, displayResume} = this.state;
         const {groups} = survey;
+        if(displayResume)
+            return (
+                <Resume
+                    survey={survey}
+                    goBack={this.goBack.bind(this)}
+                    printResult={this.printResult.bind(this)}
+                />
+            );
+
         return (
             <div className="w-full mt-8">
                 <Grid container justify="center">

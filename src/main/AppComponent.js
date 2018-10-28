@@ -5,7 +5,7 @@ import MenuAppBar from "./appbar/MenuAppBar";
 
 class AppComponent extends Component {
     state = {
-        currentStep : 1,
+        currentStep : 0,
         userData : {
             email: null,
             cellphone: null,
@@ -23,7 +23,7 @@ class AppComponent extends Component {
     }
 
     render() {
-        const {currentStep} = this.state;
+        const {currentStep, userData} = this.state;
 
         return (
             <div className="App w-full h-full">
@@ -34,7 +34,7 @@ class AppComponent extends Component {
                     />
                 )}
                 {currentStep === 1 && (
-                    <Survey />
+                    <Survey userData={userData} />
                 )}
             </div>
         );

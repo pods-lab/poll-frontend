@@ -116,6 +116,10 @@ class Survey extends Component {
     }
 
     componentDidMount() {
+        window.sendEmail = () => {
+            console.log(this.state, this.props);
+            this.onFinish();
+        };
         const serverName = process.env.REACT_APP_API_SERVER;
         const listPath = process.env.REACT_APP_ENDPOINT_LIST;
         const endpoint = `${serverName}${listPath}`;
@@ -160,13 +164,13 @@ class Survey extends Component {
                     averageGroupSum += parseInt(item.value);
                 }
             });
-            group.average_value = averageGroupSum / group.items.length;
+            group.average_value = Math.ceil(averageGroupSum / group.items.length);
             generalAverageSum += group.average_value;
         });
 
         this.setState({
             survey: {
-                average_value: generalAverageSum / (groups? groups.length : 0),
+                average_value: Math.ceil(generalAverageSum / (groups? groups.length : 0)),
                 groups: [
                     ...groups,
                 ],
@@ -175,9 +179,33 @@ class Survey extends Component {
     }
 
     onFinish() {
-        this.setState({
-            displayResume: true,
-        });
+        const serverName = process.env.REACT_APP_API_SERVER;
+        const path = process.env.REACT_APP_ENDPOINT_SEND_EMAIL;
+        const endpoint = `${serverName}${path}`;
+        const {survey} = this.state;
+        const {userData} = this.props;
+
+        fetch(endpoint, {
+            method: 'POST',
+            headers: { "Content-type": "application/json"},
+            body: JSON.stringify({
+                user_data: {
+                    full_name: userData.fullName,
+                    email: userData.email,
+                    cellphone : userData.cellphone,
+                },
+                survey,
+            }),
+        }).then((response) => response.json())
+            .then(response => {
+                this.setState({
+                    displayResume: true,
+                });
+            }).catch(response => {
+                alert("Ocurrió un error al enviar la encuesta");
+            });
+
+
     }
 
     nextStep() {
@@ -280,7 +308,7 @@ class Survey extends Component {
                             <CardContent>
                                 <div className="text-right px-12">
                                     <Typography variant="title">
-                                        <strong>Total:</strong> <span>{Math.ceil(survey.average_value)}</span>
+                                        <strong>Total:</strong> <span>{`${Math.ceil(survey.average_value)}%`}</span>
                                     </Typography>
                                 </div>
                                 <div className="flex justify-around  mt-12 my-4">

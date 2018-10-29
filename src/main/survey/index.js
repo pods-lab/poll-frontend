@@ -144,13 +144,14 @@ class Survey extends Component {
     }
 
     onChangeInput(e, groupCode, itemCode) {
-        const value = e.target.value;
+        let value = e.target.value;
         const {groups} = this.state.survey;
         let generalAverageSum = 0;
         groups.forEach(group => {
             let averageGroupSum = 0;
             group.items.forEach(item => {
                 if(group.code === groupCode && item.code === itemCode) {
+                    if(parseInt(value) > 100) value = 100;
                     item.value = value;
                 }
                 if(isNaN(item.value) || item.value === "") {
@@ -207,7 +208,34 @@ class Survey extends Component {
     }
 
     printResult() {
-        alert("about to print");
+        const serverName = process.env.REACT_APP_API_SERVER;
+        const path = process.env.REACT_APP_ENDPOINT_PDF;
+        const endpoint = `${serverName}${path}`;
+        const {survey} = this.state;
+
+        fetch(endpoint, {
+            method: 'POST',
+            headers: { "Content-type": "application/json"},
+            body: JSON.stringify({
+                survey
+            }),
+        }).then((response) => response.blob())
+            .then(response => {
+                if(response) {
+                    const file = window.URL.createObjectURL(response);
+                    const a = document.createElement("a");
+                    a.href = file;
+                    a.download = `Survey${new Date().getTime()}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => document.body.removeChild(a), 500);
+                } else {
+                    alert("Error al generar el arhivo pdf, contacte al administrador");
+                }
+            })
+            .catch(response => {
+                console.log(response);
+            });
     }
 
     render() {

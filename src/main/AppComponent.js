@@ -5,7 +5,7 @@ import MenuAppBar from "./appbar/MenuAppBar";
 
 class AppComponent extends Component {
     state = {
-        currentStep : 1,
+        currentStep : 0,
         userData : {
             email: null,
             cellphone: null,

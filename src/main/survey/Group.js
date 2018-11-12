@@ -11,8 +11,8 @@ class Group extends PureComponent {
         return (
             <div className="w-full">
                 {group.items.map((item, key) => (
-                    <div className="w-full">
-                        <div className={`w-full md:flex items-center`} key={`group-items-list-element-${group.code}-${key}`}>
+                    <div className="w-full" key={`group-items-list-element-${group.code}-${key}`}>
+                        <div className={`w-full md:flex items-center`} >
                             <div className="w-full md:w-4/5 lg:w-full flex items-start py-4   ">
                             <span className={classes.nomenclature}>
                                 {item.nomenclature}.
@@ -25,8 +25,9 @@ class Group extends PureComponent {
                                 <div>
                                     <TextField
                                         autoFocus={key === 0}
+                                        onFocus={(e) => e.target.select()}
                                         onClick={(e) => e.target.select() }
-                                        value={item.value}
+                                        value={parseInt(item.value, 10)}
                                         type={"number"}
                                         onChange={(e) => onChangeInput(e, group.code, item.code)}
                                     />

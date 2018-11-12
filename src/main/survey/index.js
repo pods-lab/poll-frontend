@@ -44,6 +44,7 @@ class Survey extends Component {
         currentStep: 0,
         survey: {},
         displayResume: false,
+        disableButton: false,
     };
 
     constructor(props) {
@@ -93,12 +94,12 @@ class Survey extends Component {
             group.items.forEach(item => {
                 if(group.code === groupCode && item.code === itemCode) {
                     if(parseInt(value) > 100) value = 100;
-                    item.value = value;
+                    item.value = parseInt(value, 10);
                 }
                 if(isNaN(item.value) || item.value === "") {
                     averageGroupSum += 0;
                 } else {
-                    averageGroupSum += parseInt(item.value);
+                    averageGroupSum += parseInt(item.value, 10);
                 }
             });
             group.average_value = Math.ceil(averageGroupSum / group.items.length);
@@ -121,7 +122,9 @@ class Survey extends Component {
         const endpoint = `${serverName}${path}`;
         const {survey} = this.state;
         const {userData} = this.props;
-
+        this.setState({
+            disableButton: true,
+        });
         fetch(endpoint, {
             method: 'POST',
             headers: { "Content-type": "application/json"},
@@ -136,10 +139,14 @@ class Survey extends Component {
         }).then((response) => response.json())
             .then(response => {
                 this.setState({
-                    displayResume: true,
+                    displayResume   : true,
+                    disableButton   : false,
                 });
             }).catch(response => {
                 alert("Ocurrió un error al enviar la encuesta");
+                this.setState({
+                    disableButton : false,
+                });
             });
 
 
@@ -235,9 +242,6 @@ class Survey extends Component {
                                             <StepLabel>
                                                 <span>&nbsp;</span>
                                             </StepLabel>
-                                            <StepContent className="w-full">
-                                                <span>&nbsp;</span>
-                                            </StepContent>
                                         </Step>
                                     ))}
                                 </Stepper>
@@ -271,7 +275,7 @@ class Survey extends Component {
                                             </Button>
                                         )}
                                         {currentStep === (groups.length - 1) && (
-                                            <Button onClick={this.onFinish.bind(this)} variant="contained">
+                                            <Button disabled={this.state.disableButton} onClick={this.onFinish.bind(this)} variant="contained">
                                                 Enviar <Send className="ml-4"/>
                                             </Button>
                                         )}

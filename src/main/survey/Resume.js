@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {
     Card,
     CardContent,
@@ -6,11 +6,22 @@ import {
     Grid,
     Divider,
     Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    TableHead,
 } from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import {
     Print,
+    CloudDownload,
 } from '@material-ui/icons';
+import ReactToPrint from 'react-to-print';
+import jsPDF from 'jspdf'
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas'
+import rasterizehtml from 'rasterizehtml';
 
 const styles = theme => ({
     groupTitle: {
@@ -36,6 +47,11 @@ const styles = theme => ({
 
 class Resume extends Component {
 
+    constructor(props) {
+        super(props);
+        this.componentToPrint = null;
+    }
+
     renderGroup(group) {
         const {classes} = this.props;
         return (
@@ -55,6 +71,9 @@ class Resume extends Component {
                                 </Typography>
                             </div>
                         </div>
+                        <div className="w-full pl-12 mb-4">
+                            <Typography variant="caption">{item.description}</Typography>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -62,6 +81,7 @@ class Resume extends Component {
     }
 
     render() {
+        // const printResult = this.printResult.bind(this);
         const {survey, classes, goBack, printResult} = this.props;
         const {groups} = survey;
         return (
@@ -73,7 +93,7 @@ class Resume extends Component {
                                 Resultados
                             </Typography>
                             <Divider/>
-                            <div className="mt-8">
+                            <div className="mt-8 px-32" ref={(e) => this.componentToPrint = e}>
                                 {groups.map((group) => (
                                     <div key={group.title} className="mt-12">
                                         <div className={classes.groupTitle}>
@@ -87,19 +107,32 @@ class Resume extends Component {
                                         {this.renderGroup(group)}
                                     </div>
                                 ))}
+                                <div className="my-12">
+                                    <Typography variant="headline" align="right">
+                                        Resultado final: {`${survey.average_value}%`}
+                                    </Typography>
+                                </div>
                             </div>
-                            <div className="my-12">
-                                <Typography variant="headline" align="right">
-                                    Resultado final: {`${survey.average_value}%`}
-                                </Typography>
-                            </div>
-                            <div className="my-12 flex justify-center">
-                                <Button className="mr-8" onClick={goBack}>
-                                    Volver
-                                </Button>
-                                <Button className="ml-8" variant="contained" onClick={printResult}>
-                                    Imprimir <Print className="ml-4"/>
-                                </Button>
+                            <div>
+
+                                <div className="my-12 flex justify-center">
+                                    <Button className="mx-8" onClick={goBack}>
+                                        Volver al inicio
+                                    </Button>
+                                    <div className="mx-12">
+                                        <ReactToPrint
+                                            trigger={() => (
+                                                <Button className="mx-8" variant="extendedFab">
+                                                    Imprimir <Print className="ml-4"/>
+                                                </Button>
+                                            )}
+                                            content={() => this.componentToPrint}
+                                        />
+                                    </div>
+                                    <Button className="mx-12" variant="extendedFab" onClick={printResult}>
+                                    Descargar <CloudDownload className="ml-4"/>
+                                    </Button>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

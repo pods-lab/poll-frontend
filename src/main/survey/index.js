@@ -35,70 +35,7 @@ const styles = theme => ({
 });
 const data = {
         "average_value":0,
-        "groups":[
-            {
-                "code":1,
-                "title":"Group 1",
-                "average_value":0,
-                "items":[
-                    {
-                        "code":1,
-                        "title":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto debitis nemo nesciunt. Debitis distinctio, expedita explicabo minima placeat quas quisquam quo repellat tempora tenetur! Accusamus aperiam dolorem expedita numquam ullam?",
-                        "nomenclature":"A",
-                        "value":0
-                    },
-                    {
-                        "code":2,
-                        "title":"Item",
-                        "nomenclature":"B",
-                        "value":0
-                    },
-                    {
-                        "code":3,
-                        "title":"Item",
-                        "nomenclature":"C",
-                        "value":0
-                    },
-                    {
-                        "code":4,
-                        "title":"Item",
-                        "nomenclature":"D",
-                        "value":0
-                    }
-                ]
-            },
-            {
-                "code":2,
-                "title":"Group 2",
-                "average_value":0,
-                "items":[
-                    {
-                        "code":1,
-                        "title":"Item",
-                        "nomenclature":"A",
-                        "value":0
-                    },
-                    {
-                        "code":2,
-                        "title":"Item",
-                        "nomenclature":"B",
-                        "value":0
-                    },
-                    {
-                        "code":3,
-                        "title":"Item",
-                        "nomenclature":"C",
-                        "value":0
-                    },
-                    {
-                        "code":4,
-                        "title":"Item",
-                        "nomenclature":"D",
-                        "value":0
-                    }
-                ]
-            }
-        ]
+        "groups" : [],
 };
 
 class Survey extends Component {
@@ -284,26 +221,34 @@ class Survey extends Component {
             </div>
         );
 
+        const [currentGroup] = groups.filter((item, k) => k === currentStep);
+
         return (
             <div className="w-full mt-8">
                 <Grid container justify="center">
                     <Grid item xs={12} sm={8} md={6} lg={8} >
                         <Card>
                             <CardContent>
-                                <Stepper orientation="vertical" activeStep={currentStep}>
+                                <Stepper orientation="horizontal" activeStep={currentStep} >
                                     {groups.map((group) => (
-                                        <Step key={group.title}>
+                                        <Step key={group.title} >
                                             <StepLabel>
-                                                <div className="w-full flex">
-                                                    {group.title}: <span className="ml-auto"><strong>{Math.ceil(group.average_value)}%</strong></span>
-                                                </div>
+                                                <span>&nbsp;</span>
                                             </StepLabel>
                                             <StepContent className="w-full">
-                                                    {this.renderItems(group)}
+                                                <span>&nbsp;</span>
                                             </StepContent>
                                         </Step>
                                     ))}
                                 </Stepper>
+                                <div className="pt-16 px-12">
+                                    <Typography variant="title" className="mb-24">
+                                        {currentGroup.title}
+                                    </Typography>
+                                </div>
+                                <div className="py-12 pt4 px-32 w-full">
+                                    {this.renderItems(currentGroup)}
+                                </div>
                             </CardContent>
                             <CardContent>
                                 <div className="text-right px-12">

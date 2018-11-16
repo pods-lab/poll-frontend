@@ -34,7 +34,7 @@ class MenuAppBar extends PureComponent {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6" color="inherit" className={`text-center ${classes.grow}`}>
-                            Electronic survey
+                            {process.env.REACT_APP_NAME}
                         </Typography>
                     </Toolbar>
                  </AppBar>
